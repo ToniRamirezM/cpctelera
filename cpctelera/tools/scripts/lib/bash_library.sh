@@ -743,9 +743,14 @@ function removeTrailingBlankLines {
 ## $n: systems to check
 ##
 function checkSystem {
-   local SYS=$(uname)
+   local SYS=$(uname -a)
    while (( $# >= 1 )); do
       case "$1" in
+         "osxm1")
+            if [[ "$SYS" =~ "Darwin" ]] && [[ "$SYS" =~ "ARM64" ]]; then
+               return 0
+            fi
+         ;;
          "osx")
             if [[ "$SYS" =~ "Darwin" ]]; then
                return 0
@@ -817,7 +822,7 @@ function filenameWithNoExt() {
 ## Echoes the bash profile initialization script file name
 ##
 function bashProfileFilename {
-   FILES=("$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile")
+   FILES=("$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile" "$HOME/.zshrc")
    for (( i = 0; i < ${#FILES[@]}; i++ )); do
       F="${FILES[$i]}"
 	  if isFileReadable "$F"; then

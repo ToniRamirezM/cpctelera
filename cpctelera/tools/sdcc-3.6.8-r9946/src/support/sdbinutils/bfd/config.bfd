@@ -168,6 +168,11 @@ case "${targ}" in
 
 # START OF targmatch.h
 #ifdef BFD64
+  arm-apple-darwin*)
+    targ_defvec=arm_mach_o_vec
+    targ_selvecs="mach_o_le_vec mach_o_be_vec mach_o_fat_vec"
+    targ_archs="$targ_archs bfd_i386_arch bfd_powerpc_arch bfd_rs6000_arch"
+    ;;
   aarch64-*-elf)
     targ_defvec=aarch64_elf64_le_vec
     targ_selvecs="aarch64_elf64_be_vec aarch64_elf32_le_vec aarch64_elf32_be_vec arm_elf32_le_vec arm_elf32_be_vec"

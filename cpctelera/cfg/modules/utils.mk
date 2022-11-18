@@ -27,6 +27,7 @@
 ##   * ADD2INTS
 ##   * ADD2SET
 ##   * ADD_N_ITEMS
+##   * CHECKSYSTEMOSXM1
 ##   * CHECKSYSTEMOSX
 ##   * CHECKSYSTEMCYGWIN
 ##   * CHECKVARIABLEISSET
@@ -137,6 +138,15 @@ $(strip \
 endef
 
 ########################
+## CHECKSYSTEMOSXM1
+##   Returns "OSX" if system is OSX on Apple Silicon Chip, empty otherwise.
+## This is designed to be used in makefile if macros
+##
+define CHECKSYSTEMOSXM1
+$(shell if [[ `uname` =~ "Darwin" ]] && [[ `uname -a` =~ "RELEASE_ARM64" ]]; then echo "OSXM1"; fi)
+endef
+
+########################
 ## CHECKSYSTEMOSX
 ##   Returns "OSX" if system is OSX, empty otherwise.
 ## This is designed to be used in makefile if macros
@@ -159,7 +169,7 @@ endef
 ## Creates a temporary filename and returns it
 ##
 define CREATETMPFILENAME
-$(if $(call CHECKSYSTEMOSX)\
+$(if $(call CHECKSYSTEMOSX) || $(call CHECKSYSTEMOSXM1)\
 	,$(shell mktemp -t tmp.XXXXX)\
 	,$(shell mktemp)
 )

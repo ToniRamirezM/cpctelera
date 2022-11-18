@@ -174,6 +174,14 @@ GCC_MINIMUM_VERSION="5.1"
 REQUIRED_LIBRARIES=("boost/graph/adjacency_list.hpp")
 LIBRARIES_EXPLANATION[0]="${REQUIRED_LIBRARIES[0]} is part of libboost, which is required for building SDCC. Please, install boost / libboost-dev / libboost-devel or similar in your system and run setup again."
 
+## needed to locate libraries on apple silicon chips
+if checkSystem "osxm1"; then
+   export CPATH=$(brew --prefix)/include
+   export LDLIBS=$(brew --prefix)/lib/libfreeimage.a
+   else 
+   export LDLIBS=-lfreeimage
+fi
+
 ## libintl.h is not required in Mac OSX
 if ! checkSystem "osx"; then
    REQUIRED_LIBRARIES+=( "libintl.h" )
@@ -183,7 +191,9 @@ fi
 if ! checkSystem "cygwin"; then
    REQUIRED_LIBRARIES+=( "FreeImage.h" )
    LIBRARIES_EXPLANATION+=( "Freeimage (development) is required to build Img2CPC. Please, install freeimage / libfreeimage-dev / freeimage-devel or similar in your system and run setup again." )
-   REQUIRED_COMMANDS+=( mono )
+   if ! checkSystem "osxm1"; then
+      REQUIRED_COMMANDS+=( mono )
+   fi
    COMMAND_EXPLANATION[$COMM_NUM]="${REQUIRED_COMMANDS[$COMM_NUM]} is required to convert arkos audio files to code automatically. Please, install it \
 and run setup again." 
    COMM_NUM=$((COMM_NUM + 1))
